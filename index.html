@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#04050a" />
+  <meta name="description" content="Tremor — every earthquake of the past day, echoing across a map of the Earth." />
+  <title>Tremor</title>
+  <link rel="stylesheet" href="style.css?v=1" />
+</head>
+<body>
+  <main class="experience" aria-labelledby="title">
+    <canvas id="map" aria-label="A dotted map of the Earth where each recent earthquake sends out rings, larger and redder the stronger it was"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="tip" id="tip" hidden></div>
+
+    <header class="masthead">
+      <button
+        class="mark"
+        id="mark"
+        type="button"
+        aria-label="What 震 means"
+        aria-expanded="false"
+        aria-controls="markCard"
+      >
+        震
+      </button>
+      <h1 id="title">Tremor</h1>
+    </header>
+
+    <aside class="mark-card" id="markCard" aria-label="What 震 means" hidden>
+      <p class="mark-title">震 <span>shin</span></p>
+
+      <p>
+        To shake, to tremble. It is written with rain above, and began as
+        the word for a thunderclap, the kind that shakes all things.
+      </p>
+
+      <p>
+        In Japanese an earthquake is 地震, jishin: the shaking of the ground.
+      </p>
+    </aside>
+
+    <div class="meta">
+      <p class="label" id="label">Earthquakes, past day</p>
+      <p class="details" id="details" hidden></p>
+    </div>
+
+    <section class="intro" id="intro">
+      <p class="instruction">
+        The ground is never still.<br />
+        Watch a day of it tremble.
+      </p>
+      <p class="hint">Press space or tap Begin.</p>
+    </section>
+
+    <section class="reading" id="reading" aria-live="polite" hidden>
+      <p class="condition" id="condition">Listening to the ground.</p>
+      <p class="arrival" id="arrival"></p>
+    </section>
+
+    <div class="controls" id="controls">
+      <button class="ctrl ctrl-start" id="start" type="button">Begin</button>
+
+      <span class="ctrl-divider" aria-hidden="true"></span>
+
+      <button class="ctrl" id="spanToggle" type="button">Span: Day</button>
+
+      <button class="ctrl" id="soundToggle" type="button" aria-pressed="false">
+        Sound: Off
+      </button>
+
+      <button
+        class="ctrl ctrl-info"
+        id="aboutButton"
+        type="button"
+        aria-expanded="false"
+        aria-controls="aboutPanel"
+        aria-label="About Tremor"
+      >
+        i
+      </button>
+    </div>
+
+    <p class="status" id="status" role="status">Listening to the seismographs.</p>
+
+    <aside class="about-panel" id="aboutPanel" hidden>
+      <button class="close-about" id="closeAbout" type="button" aria-label="Close information">
+        ×
+      </button>
+
+      <p>
+        <em>Tremor</em> replays every earthquake the world's seismographs
+        have reported over the past day, or the past week, in a minute or two.
+      </p>
+
+      <p>
+        Each one sends out an echo from where it struck. The stronger it was,
+        the wider and redder the echo, and the more rings it leaves: one for a
+        tremor, two from magnitude 3, three from magnitude 5.
+      </p>
+
+      <ul class="legend" aria-label="Magnitude">
+        <li><span class="swatch" style="--c: #ffe3a8; --s: 5px"></span>M 1</li>
+        <li><span class="swatch" style="--c: #ffc048; --s: 8px"></span>M 3</li>
+        <li><span class="swatch" style="--c: #ff5a2c; --s: 12px"></span>M 5</li>
+        <li><span class="swatch" style="--c: #e0142a; --s: 17px"></span>M 7</li>
+      </ul>
+
+      <p>
+        The faint lines are the seams between the plates, where most of them
+        begin. Drag the map to turn it, and point at an ember to read it.
+      </p>
+
+      <p class="attribution">
+        Data by
+        <a href="https://earthquake.usgs.gov/earthquakes/feed/" target="_blank" rel="noopener noreferrer">USGS</a>.
+        Map from
+        <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer">Natural Earth</a>,
+        plates from
+        <a href="https://github.com/fraxen/tectonicplates" target="_blank" rel="noopener noreferrer">PB2002</a>.
+      </p>
+    </aside>
+  </main>
+
+  <noscript>This piece needs JavaScript to listen to the ground.</noscript>
+
+  <script src="map.js?v=1"></script>
+  <script src="app.js?v=1"></script>
+</body>
+</html>

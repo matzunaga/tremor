@@ -1,0 +1,550 @@
+:root {
+  color-scheme: dark;
+  --space: #04050a;
+  --ink: #efe9dc;
+  --muted: rgba(239, 233, 220, 0.56);
+  --faint: rgba(239, 233, 220, 0.14);
+  --accent: #ff6a3d;
+  --panel: rgba(8, 9, 16, 0.78);
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Hiragino Mincho ProN",
+    "Yu Mincho", Georgia, serif;
+  --mono: "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --top: env(safe-area-inset-top, 0px);
+  --bottom: env(safe-area-inset-bottom, 0px);
+  --left: env(safe-area-inset-left, 0px);
+  --right: env(safe-area-inset-right, 0px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+  background: var(--space);
+  color: var(--ink);
+  font-family: var(--mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  color: inherit;
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 5px;
+}
+
+.experience {
+  position: relative;
+  isolation: isolate;
+  width: 100vw;
+  height: 100dvh;
+  background: var(--space);
+}
+
+#map {
+  touch-action: none;
+  position: fixed;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* A breath of film grain, as in Tide and Solar */
+
+.grain {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  opacity: 0.06;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+
+/* Masthead */
+
+.masthead {
+  position: fixed;
+  z-index: 1;
+  top: calc(var(--top) + 25px);
+  left: calc(var(--left) + 28px);
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+}
+
+.mark {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: var(--serif);
+  font-size: 22px;
+  line-height: 1;
+  opacity: 0.85;
+  transition: opacity 0.25s ease;
+}
+
+.mark:hover,
+.mark[aria-expanded="true"] {
+  opacity: 1;
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+/* Live figures */
+
+.meta {
+  position: fixed;
+  z-index: 1;
+  top: calc(var(--top) + 25px);
+  right: calc(var(--right) + 28px);
+  text-align: right;
+}
+
+.meta p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.meta .details {
+  margin-top: 5px;
+}
+
+.details span + span::before {
+  content: " · ";
+}
+
+.label,
+.details,
+.hint,
+.status,
+.arrival {
+  font-size: 10px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.hint {
+  color: var(--muted);
+}
+
+/* Opening text and the reading that replaces it */
+
+.intro,
+.reading {
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  width: min(980px, calc(100vw - 48px));
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.intro {
+  bottom: calc(var(--bottom) + 95px);
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+body.running .intro {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.reading {
+  bottom: calc(var(--bottom) + 72px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.4s ease 1.2s, top 1.8s ease, transform 0.6s ease;
+}
+
+body.running .reading {
+  opacity: 1;
+}
+
+.instruction,
+.condition {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+/* on wide screens each line of copy stays on one line */
+.instruction {
+  font-size: clamp(22px, 2.5vw, 34px);
+  line-height: 1.1;
+}
+
+.instruction br {
+  display: none;
+}
+
+.condition {
+  font-size: clamp(20px, 2.3vw, 32px);
+  line-height: 1.14;
+}
+
+.intro .hint,
+.arrival {
+  margin: 16px 0 0;
+  color: var(--muted);
+}
+
+/* Controls fade away once the piece begins, and return with a move or a tap */
+
+.controls {
+  position: fixed;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 18px 24px calc(var(--bottom) + 22px);
+  transition: opacity 0.6s ease, transform 0.6s ease, visibility 0.6s ease;
+}
+
+body.running .controls {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+
+body.running.controls-visible .controls {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.ctrl {
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.ctrl:hover {
+  color: var(--ink);
+}
+
+.ctrl-start {
+  border-bottom: 1px solid var(--muted);
+  color: var(--ink);
+}
+
+.ctrl-start:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.ctrl-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--faint);
+}
+
+.ctrl-info {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid var(--faint);
+  border-radius: 50%;
+  font-family: var(--serif);
+  font-size: 14px;
+  font-style: italic;
+  text-transform: none;
+}
+
+.status {
+  position: fixed;
+  z-index: 1;
+  bottom: calc(var(--bottom) + 6px);
+  left: 50%;
+  margin: 0;
+  opacity: 0;
+  transform: translateX(-50%);
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  transition: opacity 0.6s ease;
+}
+
+body.running .status {
+  opacity: 0.5;
+}
+
+body.running.controls-visible .status {
+  opacity: 0;
+}
+
+/* Hover card for a single earthquake */
+
+.tip {
+  position: fixed;
+  z-index: 3;
+  max-width: 240px;
+  padding: 8px 10px;
+  border: 1px solid var(--faint);
+  background: var(--panel);
+  color: var(--muted);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.tip[hidden] {
+  display: none;
+}
+
+.tip strong {
+  display: block;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Cards */
+
+.mark-card,
+.about-panel {
+  position: fixed;
+  z-index: 4;
+  top: calc(var(--top) + 70px);
+  padding: 18px 20px;
+  border: 1px solid var(--faint);
+  background: var(--panel);
+  color: var(--muted);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.26;
+}
+
+.mark-card[hidden],
+.about-panel[hidden] {
+  display: none;
+}
+
+.mark-card {
+  left: calc(var(--left) + 24px);
+  width: min(300px, calc(100vw - 48px));
+}
+
+.about-panel {
+  right: calc(var(--right) + 24px);
+  width: min(340px, calc(100vw - 48px));
+  padding-right: 43px;
+}
+
+.mark-card p,
+.about-panel p {
+  margin: 0 0 12px;
+}
+
+.mark-card p:last-child,
+.about-panel p:last-child {
+  margin-bottom: 0;
+}
+
+.mark-title {
+  color: var(--accent);
+  font-size: 22px;
+  letter-spacing: 0.04em;
+}
+
+.mark-title span {
+  margin-left: 6px;
+  color: var(--muted);
+  font-size: 14px;
+  letter-spacing: 0;
+}
+
+.close-about {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.close-about:hover {
+  color: var(--ink);
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swatch {
+  width: var(--s);
+  height: var(--s);
+  border: 1.5px solid var(--c);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--c);
+}
+
+.attribution {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+a {
+  color: var(--ink);
+  text-underline-offset: 3px;
+}
+
+noscript {
+  position: fixed;
+  bottom: calc(var(--bottom) + 24px);
+  left: 28px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+@media (max-width: 700px) {
+  .masthead {
+    top: calc(var(--top) + 21px);
+    left: calc(var(--left) + 20px);
+  }
+
+  .meta {
+    top: calc(var(--top) + 21px);
+    right: calc(var(--right) + 20px);
+    max-width: calc(100vw - 150px);
+  }
+
+  .meta .details {
+    line-height: 1.6;
+  }
+
+  .details span {
+    display: block;
+  }
+
+  .details span + span::before {
+    content: none;
+  }
+
+  .controls {
+    gap: 10px;
+    padding: 14px 16px calc(var(--bottom) + 18px);
+  }
+
+  .intro {
+    bottom: calc(var(--bottom) + 76px);
+  }
+
+  .instruction {
+    font-size: 24px;
+  }
+
+  .instruction br {
+    display: inline;
+  }
+
+  .condition {
+    font-size: 19px;
+  }
+
+  /* the reading sits just above the status line; it steps up when the controls return */
+  body.running.controls-visible .reading {
+    transform: translate(-50%, -52px);
+  }
+
+  .arrival {
+    margin-top: 10px;
+  }
+
+  .mark-card,
+  .about-panel {
+    top: calc(var(--top) + 60px);
+  }
+
+  .mark-card {
+    left: 16px;
+    width: calc(100vw - 32px);
+  }
+
+  .about-panel {
+    right: 16px;
+    width: min(340px, calc(100vw - 32px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
