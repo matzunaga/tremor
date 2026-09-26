@@ -243,7 +243,7 @@
     }
 
     // land as a honeycomb of dots, a little brighter along the shore
-    const r = Math.max(0.55, MAP.step * s * 0.34);
+    const r = Math.max(0.45, MAP.step * s * 0.22);
     land.forEach((dot, n) => {
       const grain = seeded(n + 1);
       // warmer toward the dry middle latitudes, cooler toward the poles
@@ -253,7 +253,7 @@
       const cb = mix(200, 164, warm);
       // the top rows fade, so the map has no hard edge in the Arctic
       const edge = smooth(MAP.north, MAP.north - 7, dot.lat);
-      const a = (dot.coast ? 0.62 : 0.26 + grain * 0.16) * edge;
+      const a = (dot.coast ? 0.3 : 0.12 + grain * 0.08) * edge;
       g.fillStyle = `rgba(${cr | 0}, ${cg | 0}, ${cb | 0}, ${a})`;
       g.beginPath();
       g.arc(x(dot.lon), y(dot.lat), dot.coast ? r * 1.05 : r, 0, TAU);
@@ -281,9 +281,9 @@
     };
     g.save();
     g.filter = `blur(${Math.max(2, s * 0.9)}px)`;
-    drawPlates(Math.max(2, s * 0.9), "rgba(255, 96, 48, 0.16)");
+    drawPlates(Math.max(2, s * 0.9), "rgba(255, 96, 48, 0.06)");
     g.restore();
-    drawPlates(Math.max(0.6, s * 0.2), "rgba(255, 128, 80, 0.24)");
+    drawPlates(Math.max(0.5, s * 0.14), "rgba(255, 128, 80, 0.12)");
 
     layers.map = c;
     layers.mapPad = pad;
@@ -594,7 +594,9 @@
       // on a narrow screen the map opens on the strongest earthquake
       if (scene.wrap && data.strongest && !state.panned) scene.viewLon = data.strongest.lon;
 
-      const fresh = !state.running || state.cursor < data.generated - SPANS[span].ms;
+      // a new span always replays from its start; a refresh keeps the replay where it is
+      const fresh = state.fromStart || !state.running || state.cursor < data.generated - SPANS[span].ms;
+      state.fromStart = false;
       if (fresh) restart();
       else {
         // keep the replay where it is, in the new list
@@ -864,6 +866,8 @@
       `The ground is never still.<br />Watch a ${data.span} of it tremble.`;
     data.quakes = [];
     data.strongest = null;
+    state.fromStart = true;
+    state.next = 0;
     echoes.length = 0;
     state.notable = null;
     arrivalEl.textContent = "";
