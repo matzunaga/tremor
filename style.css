@@ -100,6 +100,20 @@ a:focus-visible {
   transition: opacity 0.25s ease;
 }
 
+/* The glyph comes from mark.svg, drawn inline so its lines take the mark's color */
+
+.mark svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+/* a drawing has no text baseline, so the mark keeps its place at the top of the row
+   and the title stays exactly where it sat beside the old character */
+.mark {
+  align-self: flex-start;
+}
+
 .mark:hover,
 .mark[aria-expanded="true"] {
   opacity: 1;
